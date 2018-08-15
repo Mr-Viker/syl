@@ -12,32 +12,42 @@
     </div>
 
     <van-row class="page-bd" type='flex' justify='center'>
-      <van-tabbar-item :icon="item.icon" :to='item.link' v-for='item in bds' :key='item.link'>{{ item.title }}</van-tabbar-item>
+      <van-tabbar class='bd-content'>
+        <van-tabbar-item :icon="item.icon" :to='item.link' v-for='item in bds' :key='item.title' :info='item.info'>{{ item.title }}</van-tabbar-item>
+      </van-tabbar>
     </van-row>
 
     <div class="page-ft">
-      <van-cell :title="item.title" :icon="item.icon" is-link v-for='item in fts' :key='item.link' />
+      <template v-for='item in fts'>
+        <van-cell :title="item.title" :icon="item.icon" clickable is-link v-if='item.id == 3' @click='showAppInfo' />
+        <van-cell :title="item.title" :icon="item.icon" clickable is-link v-else-if='item.id == 4' @click='showQrcode' />
+        <van-cell :title="item.title" :icon="item.icon" :to='item.link' clickable is-link v-else/>
+      </template>
     </div>
+    
   </section>
 </template>
 
 
 <script>
 import {mapState} from 'vuex';
+import { ImagePreview } from 'vant';
 
 export default {
   name: 'Person',
   data() {
     return {
       bds: [
-        { title: '待付款', icon: 'pending-payment', link: '/order' },
-        { title: '待收货', icon: 'pending-deliver', link: '/order' },
-        { title: '已完成', icon: 'sign', link: '/order' },
+        { title: '待付款', icon: 'pending-payment', link: '/orderList?index=1', info: '' },
+        { title: '待发货', icon: 'pending-payment', link: '/orderList?index=2', info: '' },
+        { title: '待收货', icon: 'pending-deliver', link: '/orderList?index=3', info: '' },
+        // { title: '已完成', icon: 'sign', link: '/orderList?index=4' },
       ],
       fts: [
-        { title: '我的订单', icon: 'pending-orders', link: '/order' },
-        { title: '我的收藏', icon: 'like-o', link: '/order' },
-        { title: '软件信息', icon: 'points', link: '/order' },
+        { id: 1, title: '我的订单', icon: 'pending-orders', link: '/orderList' },
+        { id: 2, title: '我的收藏', icon: 'like-o', link: '/collectList' },
+        { id: 3, title: '软件信息', icon: 'info-o', link: '' },
+        { id: 4, title: '联系客服', icon: 'chat', link: '' },
       ],
     };
   },
@@ -46,7 +56,16 @@ export default {
     ...mapState({
       hasLogin: state => state.hasLogin,
       userInfo: state => state.userInfo,
+      config: state => state.config,
     }),
+  },
+
+  watch: {
+    userInfo(newVal, oldVal) {
+      newVal.waitPay > 0 ? this.$set(this.bds[0], 'info', newVal.waitPay) : '';
+      newVal.waitSend > 0 ? this.$set(this.bds[1], 'info', newVal.waitSend) : '';
+      newVal.waitConfirm > 0 ? this.$set(this.bds[2], 'info', newVal.waitConfirm) : '';
+    },
   },
 
   created() {
@@ -55,7 +74,22 @@ export default {
     }
   },
 
-  methods: {},
+  methods: {
+    // qrcode弹框
+    showQrcode() {
+      ImagePreview([this.getImgURL(this.config.qrcode)]);
+    },
+
+    // 软件信息
+    showAppInfo() {
+      this.$dialog.alert({
+        title: '随性的森屿鹿小店',
+        message: '<div>一个非盈利非营业性的App</div><div>如果能让您片刻得到放松欢愉</div><div>那是我的荣幸</div><div>感谢</div>',
+        closeOnClickOverlay: true,
+        className: 'info-dialog',
+      });
+    },
+  },
 
 } 
 </script>
@@ -101,6 +135,12 @@ export default {
     background-color: #fff;
     padding: .1rem .4rem;
     margin-bottom: .3rem;
+    .bd-content {
+      position: relative;
+      &::after{
+        border: none;
+      }
+    }
     .van-tabbar-item__icon {
       font-size: .24rem;
     }
@@ -108,20 +148,6 @@ export default {
       font-size: .13rem;
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 </style>

@@ -3,13 +3,26 @@ import Router from 'vue-router'
 
 import Home from '@/views/Home/Home'
 
-import Type from '@/views/Type/Type'
+import GoodsList from '@/views/Goods/GoodsList'
+const GoodsDetail = () => import('@/views/Goods/GoodsDetail')
+
+const OrderSubmit = () => import('@/views/Order/OrderSubmit')
+const OrderList = () => import('@/views/Order/OrderList')
+
+const Pay = () => import('@/views/Pay/Pay')
+const PayResult = () => import('@/views/Pay/PayResult')
+
+
+const AddressList = () => import('@/views/Address/AddressList')
+const Address = () => import('@/views/Address/Address')
 
 import Person from '@/views/Person/Person'
 const Register = () => import('@/views/Person/Register')
 const Login = () => import('@/views/Person/Login')
 const Personal = () => import('@/views/Person/Personal')
 const ChangePassword = () => import('@/views/Person/ChangePassword')
+const ForgetPassword = () => import('@/views/Person/ForgetPassword')
+const CollectList = () => import('@/views/Person/CollectList')
 
 
 Vue.use(Router)
@@ -27,9 +40,9 @@ export default new Router({
       }
     },
     {
-      path: '/type',
-      name: 'Type',
-      component: Type,
+      path: '/goodsList',
+      name: 'GoodsList',
+      component: GoodsList,
       meta: {
         title: '全部分类',
         showTab: true,
@@ -78,7 +91,7 @@ export default new Router({
       }
     },
     {
-      path: '/change_password',
+      path: '/changePassword',
       name: 'ChangePassword',
       component: ChangePassword,
       meta: {
@@ -88,7 +101,104 @@ export default new Router({
         requireAuth: true,
       }
     },
+    {
+      path: '/goodsDetail',
+      name: 'GoodsDetail',
+      component: GoodsDetail,
+      meta: {
+        title: '商品详情',
+        showTab: false,
+        showHd: true,
+      }
+    },
+    {
+      path: '/orderSubmit',
+      name: 'OrderSubmit',
+      component: OrderSubmit,
+      meta: {
+        title: '确认订单',
+        showTab: false,
+        showHd: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/addressList',
+      name: 'AddressList',
+      component: AddressList,
+      meta: {
+        title: '管理地址',
+        showTab: false,
+        showHd: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/address',
+      name: 'Address',
+      component: Address,
+      meta: {
+        title: '编辑地址',
+        showTab: false,
+        showHd: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/orderList',
+      name: 'OrderList',
+      component: OrderList,
+      meta: {
+        title: '我的订单',
+        showTab: false,
+        showHd: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/collectList',
+      name: 'CollectList',
+      component: CollectList,
+      meta: {
+        title: '我的收藏',
+        showTab: false,
+        showHd: true,
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/forgetPassword',
+      name: 'ForgetPassword',
+      component: ForgetPassword,
+      meta: {
+        title: '忘记密码',
+        showTab: false,
+        showHd: true,
+      }
+    },
+    {
+      path: '/pay',
+      name: 'Pay',
+      component: Pay,
+      meta: {
+        title: '支 付',
+        showTab: false,
+        showHd: true,
+        requireAuth: true,
 
+      }
+    },
+    {
+      path: '/payResult',
+      name: 'PayResult',
+      component: PayResult,
+      meta: {
+        title: '支付结果',
+        showTab: false,
+        showHd: true,
+        requireAuth: true,
+      }
+    },
 
 
     // 必须放最后

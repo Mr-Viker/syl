@@ -11,9 +11,10 @@
 
     <van-cell-group class="page-bd">
       <van-cell title="昵称" :value='userInfo.username' icon="points" @click='showDialog = !showDialog' is-link />
-      <van-cell title="手机号" :value='userInfo.phone' icon="phone"/>
-      <van-cell title="密码" value='修改密码' icon="edit-data" is-link to='/change_password' />
-      <van-cell title="地址" value='地址管理' icon="location" is-link to='/address_list' />
+      <van-cell title="手机号" :value='userInfo.phone' icon="phone" class='bd-cell-2' />
+      <van-cell title="密码" value='修改密码' icon="edit-data" is-link to='/changePassword' />
+      <van-cell title="地址" value='管理地址' icon="location" is-link to='/addressList' />
+      <van-switch-cell v-model="userInfo.autoplay" title="自动播放" @change='updateAutoplay' />
     </van-cell-group>
 
     <div class="btn-submit-container">
@@ -29,6 +30,7 @@
 import {mapState} from 'vuex';
 import VueCoreImageUpload  from 'vue-core-image-upload';
 import ChangeNameDialog  from '@/components/ChangeNameDialog';
+import axios from '@/assets/js/http';
 
 export default {
   name: 'Personal',
@@ -53,18 +55,33 @@ export default {
   },
 
   methods: {
+    // 更新自动播放设置
+    updateAutoplay(checked) {
+      var autoplay = checked ? 1 : 0;
+      this.$api.updateUserInfo({autoplay: autoplay, type: 'autoplay'})
+      .then(res => {
+        if (res.code === '00') {
+          this.$store.commit('updateUserInfo', {autoplay: checked});
+        } else {
+          this.$toast(res.msg);
+        }
+      })
+    },
+
     // 登出
     logout() {
       this.$api.logout()
       .then(res => {
         this.$toast({message: '登出成功', duration: 1500});
-        window.localStorage.removeItem('token');
         this.$store.commit('setHasLogin', false);
         this.$store.commit('setUserInfo', {});
 
+        window.localStorage.removeItem('token');
+        axios.defaults.headers.token = '';
+
         setTimeout(() => {
           this.$router.push({name: 'Person'});
-          window.location.reload();
+          // window.location.reload();
         }, 1500);
       })
     },
@@ -100,6 +117,14 @@ export default {
 .personal-page {
   .page-bd {
     margin: .3rem 0 .6rem;
+  }
+  .upload-container {
+    border: none;
+  }
+  .bd-cell-2 {
+    .van-cell__value {
+      color: @gray;
+    }
   }
 }
 </style>

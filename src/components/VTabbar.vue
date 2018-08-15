@@ -11,8 +11,8 @@ export default {
   data() {
     return {
       tabs: [
-        { title: '首页', icon: 'points-mall', link: '/' },
-        { title: '分类', icon: 'wap-nav', link: '/type' },
+        { title: '首页', icon: 'shop', link: '/' },
+        { title: '分类', icon: 'wap-nav', link: '/goodsList' },
         { title: '我的', icon: 'contact', link: '/person' },
       ]
     };

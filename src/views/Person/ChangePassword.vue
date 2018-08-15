@@ -41,7 +41,7 @@ export default {
         oldPassword: '',
         password: '',
         confirmPassword: '',
-        type: 'password'
+        type: 'password' // 更新类型 有username password
       },
       pwdTypes: ['password', 'password', 'password'],
     };

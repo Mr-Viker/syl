@@ -22,7 +22,7 @@
         </van-cell-group>
 
         <div class="btn-submit-container">
-          <van-button type="primary" native-type='submit' tag='input' :block='true' class='btn-submit' value='确 定'></van-button>
+          <van-button type="primary" native-type='submit' tag='input' :block='true' class='btn-submit' value='注 册'></van-button>
         </div>
       </form>
 
@@ -37,9 +37,10 @@
 
 <script>
 import VUploader  from '@/components/VUploader';
+import axios from '@/assets/js/http';
 
 export default {
-  name: 'Login',
+  name: 'Register',
   components: { VUploader },
   data() {
     return {
@@ -97,9 +98,16 @@ export default {
         this.$api.register(this.form)
         .then(res => {
           if (res.code === '00') {
+            // 注册成功则保存token和用户信息
             this.$toast({message: '注册成功', duration: 1500});
+            this.$store.commit('setHasLogin', true);
+            this.$store.commit('setUserInfo', res.data);
+            
+            window.localStorage.setItem('token', res.data.token);
+            axios.defaults.headers.token = 'bearer ' + res.data.token;
+
             setTimeout(() => {
-              this.$router.push({name: 'Login', query: {avatar: this.form.avatar}});
+              this.$router.push({name: 'Person'});
             }, 1500);
           } else {
             this.$toast(res.msg);
