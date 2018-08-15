@@ -4,7 +4,7 @@
     <router-view :class='{"page-has-hd": showHd, "page-has-tab": showTab}'/>
     <v-tabbar v-if='showTab'></v-tabbar>
 
-    <van-icon name="points" @click='showAudioPanel = !showAudioPanel' class='hd-play' />
+    <!-- <van-icon name="points" @click='showAudioPanel = !showAudioPanel' class='hd-play' /> -->
     <audio-panel :show="showAudioPanel"></audio-panel>
   </div>
 </template>

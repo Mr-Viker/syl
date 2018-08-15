@@ -89,10 +89,11 @@ export default {
     // 音频播放器
     Vue.prototype.initAudio = function(autoplay) {
       var srcs = [
-        require('@/assets/audio/chunfengchui.mp3'),
-        require('@/assets/audio/fusheng.mp3'),
-        require('@/assets/audio/ruyueerzhi.mp3'),
-        require('@/assets/audio/daqianshijie.mp3'),
+        require('@/assets/audio/audio-1.mp3'),
+        require('@/assets/audio/audio-2.mp3'),
+        require('@/assets/audio/audio-3.mp3'),
+        require('@/assets/audio/audio-4.mp3'),
+        require('@/assets/audio/audio-5.mp3'),
       ];
       // Setup the new Howl.
       var sound = new Howl({
