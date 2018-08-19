@@ -68,8 +68,15 @@ export default {
     onSubmit() {
       this.form.addressId = this.selectedAddress.id;
       if (this.validate(this.form)) {
+        this.$toast.loading({
+          duration: 0,       // 持续展示 toast
+          forbidClick: true, // 禁用背景点击
+          message: '正在提交订单'
+        });
+
         this.$api.submitOrder(this.form)
         .then(res => {
+          this.$toast.clear();
           if (res.code === '00') {
             // 提交成功后带着订单ID去支付页
             this.$router.push({name: 'Pay', query: {id: res.data.id, total: this.total}});
