@@ -3,6 +3,9 @@
     <v-header :title='title' v-if='showHd'></v-header>
     <router-view :class='{"page-has-hd": showHd, "page-has-tab": showTab}'/>
     <v-tabbar v-if='showTab'></v-tabbar>
+
+    <van-icon name="points" @click='showAudioPanel = !showAudioPanel' class='hd-play' />
+    <audio-panel :show="showAudioPanel"></audio-panel>
   </div>
 </template>
 
@@ -10,13 +13,14 @@
 <script>
 import VHeader from '@/components/VHeader';
 import VTabbar from '@/components/VTabbar';
+import AudioPanel from '@/components/AudioPanel';
 
 export default {
   name: 'App',
-  components: { VHeader, VTabbar },
+  components: { VHeader, VTabbar, AudioPanel },
   data() {
     return {
-
+      showAudioPanel: false, //显示音频播放面板
     };
   },
   computed: {
@@ -28,20 +32,27 @@ export default {
   created() {
     this.getConfig()
     .then(res => {
-      this.initTitle();
+      if (window.localStorage.getItem('token')) {
+        return this.getUserInfo();
+      }
+      return res;
+    }).then(res => {
+      this.init();
       this.watchRouter();
+      return res;
+    }).then(res => {
+      this.initAudio(this.$store.state.userInfo.autoplay);
     });
-
-    if (window.localStorage.getItem('token')) {
-      this.getUserInfo();
-    }
   },
 
   methods: {
-
-    // 初始化title（进入或刷新）
-    initTitle() {
+    // 初始化（进入或刷新）
+    init() {
       document.title = this.$route.meta.title + ' - ' + this.$store.state.config.system_name;
+      // 如果本页面要登录且没有登录 则跳去登录
+      if (this.$route.meta.requireAuth && !this.$store.state.hasLogin) {
+        this.$router.push({name: 'Login', query: {redirect: this.$route.fullPath}});
+      }
     },
 
     // 路由跳转时检测是否需要登录

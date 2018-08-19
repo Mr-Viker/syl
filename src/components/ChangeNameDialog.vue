@@ -26,10 +26,6 @@ export default {
   //   }),
   // },
 
-  mounted() {
-    console.log('props', this.username);
-  },
-
   methods: {
     beforeClose(action, done) {
       if (action === 'confirm') {

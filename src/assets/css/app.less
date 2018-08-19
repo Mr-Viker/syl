@@ -15,10 +15,20 @@ body {
 }
 
 #app {
+  position: relative;
   height: 100vh;
   .page {
     box-sizing: border-box;
     min-height: 100%;
+  }
+  .hd-play {
+    position: fixed;
+    z-index: 100;
+    bottom: .7rem;
+    right: .15rem;
+    font-size: .3rem;
+    color: @pink;
+    opacity: .8;
   }
 }
 
@@ -28,6 +38,29 @@ body {
 .page-has-tab {
   padding-bottom: .5rem !important;
 }
+
+
+/* ------------- cover vant default css ------------------- */
+.van-tab--active {
+  color: @pink;
+}
+.van-tabs__line {
+  background-color: @pink;
+}
+.van-tabbar-item--active {
+  color: @blue;
+}
+.van-card {
+  background-color: #fff;
+  font-size: .14rem;
+}
+.van-button {
+  font-size: .14rem;
+}
+
+
+
+
 
 .text-l {
   text-align: left;
@@ -39,14 +72,40 @@ body {
   text-align: right;
 }
 
+
+
 .primary-bgc {
   background-color: @primary;
+  color: #fff;
 }
 .warning-bgc {
   background-color: @warning;
+  color: #fff;
 }
 .danger-bgc {
   background-color: @danger;
+  color: #fff;
+}
+.pink-bgc {
+  background-color: @pink;
+  color: #fff;
+}
+.green-bgc {
+  background-color: @green;
+  color: #fff;
+  opacity: .8;
+}
+.gray {
+  color: @gray;
+}
+.pink {
+  color: @pink;
+}
+.yellow {
+  color: @yellow;
+}
+.blue {
+  color: @blue;
 }
 
 
@@ -81,6 +140,8 @@ body {
 }
 
 
+
+
 .btn-submit-container {
   box-sizing: border-box;
   display: block;
@@ -111,15 +172,16 @@ a {
 
 /* ------- goods-card ----------- */
 .goods-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  padding: .3rem 4%;
+  // display: flex;
+  // flex-wrap: wrap;
+  // justify-content: flex-start;
+  padding: .2rem 4% 0;
 }
 .goods-card {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
+  display: inline-block;
   width: 49%;
   padding: .05rem;
   margin-bottom: .1rem;
@@ -135,10 +197,36 @@ a {
   .card-thumb {
     height: 1rem;
     width: auto;
+    max-width: 100%;
     margin: auto;
   }
   .card-bd {
-    padding: .1rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: .33rem;
+    line-height: .17rem;
+    font-size: .13rem;
+    word-break: break-all;
+    padding: 5px 5px 0;
+  }
+  .card-ft {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .05rem;
+  }
+  .card-ft-l{
+    color: @yellow;
+    i {
+      vertical-align: top;
+      margin-right: .03rem;
+    }
+  }
+  .card-ft-r {
+    color: @pink
   }
 }
 
@@ -146,7 +234,18 @@ a {
 
 
 
-
+/* appinfo dialog */
+.info-dialog {
+  font-size: .14rem;
+  .van-dialog__header {
+    color: @pink;
+  }
+  .van-dialog__message {
+    text-align: center;
+    font-size: .13rem;
+    color: @gray;
+  }
+}
 
 
 

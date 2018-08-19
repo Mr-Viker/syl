@@ -1,22 +1,22 @@
 <template>
   <section class="page home-page">
     <van-swipe :autoplay="3000" :duration='3000' class='page-hd'>
-      <van-swipe-item v-for="(image, index) in images" :key="index">
-        <img v-lazy="image" class="img-b" />
+      <van-swipe-item v-for="item in banners" :key="item.id">
+        <img v-lazy="getImgURL(item.img)" class="img-b" />
       </van-swipe-item>
     </van-swipe>
 
     <div class="page-bd">
       <van-row class="bd-t" type='flex' justify='center' align='center'>
-        <router-link :to='item.link' v-for='item in types' :key='item.title' class='bd-t-item'>
-          <img :src="item.src" alt="" class="img-face">
-          <van-row class="bd-t-item-title">{{ item.title }}</van-row>
+        <router-link :to="'/goodsList?id=' + item.id" v-for='(item, index) in cates' :key='item.id' class='bd-t-item'>
+          <img :src="getImgURL(item.icon)" alt="" class="img-face">
+          <van-row :class="['bd-t-item-title', 'bd-t-item-title-' + index]">{{ item.name }}</van-row>
         </router-link>
       </van-row>
 
       <van-row class="bd-b">
-        <router-link class="bd-b-item" :to='item.link' v-for='item in bigPics' :key='item.link'>
-          <img :src="item.src" alt="" class='img-w'>
+        <router-link class="bd-b-item" :to='item.link' v-for='item in bigPics' :key='item.id'>
+          <img :src="getImgURL(item.img)" alt="" class='img-w'>
         </router-link>
       </van-row>
     </div>
@@ -25,20 +25,18 @@
       <van-row class='ft-title text-c'>
         <van-col class="ft-title-text" offset='3' span='18'><span>随机推荐</span></van-col>
       </van-row>
+
       <van-list v-model="loading" :finished="finished" @load="getGoodsList" class='ft-content goods-list'>
-        <!-- <van-cell v-for="item in goodsList" :key="item" :title="item + ''" /> -->
-        <div class="goods-card">
-          <div class="card-hd"><img src="../../assets/img/person/user-default-1.jpeg" alt="" class="card-thumb"></div>
-          <div class="card-bd van-ellipsis">我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题</div>
-        </div>
-        <div class="goods-card">
-          <div class="card-hd"><img src="../../assets/img/person/user-default-2.jpeg" alt="" class="card-thumb"></div>
-          <div class="card-bd van-ellipsis">我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题</div>
-        </div>
-        <div class="goods-card">
-          <div class="card-hd"><img src="../../assets/img/person/user-default-2.jpeg" alt="" class="card-thumb"></div>
-          <div class="card-bd van-ellipsis">我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题我是标题</div>
-        </div>
+        <router-link :to="'/goodsDetail?id=' + item.id" class="goods-card" v-for='item in goodsList' :key='item.id'>
+          <div class="card-hd"><img :src="getImgURL(item.thumb)" alt="" class="card-thumb"></div>
+          <div class="card-bd">{{ item.title }}</div>
+          <div class="card-ft">
+            <span class="card-ft-l"><van-icon name="gold-coin"></van-icon><span>{{ format(item.price) }}</span></span>
+            <span class="card-ft-r">已售{{ item.sold }}</span>
+          </div>
+        </router-link>
+
+        <div class="van-list__loading" v-if='finished'><span class="van-list__loading-text">全部加载完成啦~</span></div>
       </van-list>
     </div>
 
@@ -53,41 +51,79 @@ export default {
   name: 'Home',
   data() {
     return {
-      // 轮播
-      images: [
-        // require('@/assets/img/carouse/carouse-1.jpg'),
-        require('@/assets/img/carouse/carouse-6.jpg'),
-        // require('@/assets/img/carouse/carouse-7.jpg'),
-        // require('@/assets/img/carouse/carouse-8.jpg'),
-        require('@/assets/img/carouse/carouse-9.jpg'),
-      ],
-      // 分类导航
-      types: [
-        {title: '艺术', src: require('@/assets/img/type/type-3.jpeg'), link: '/type?id=1'},
-        {title: '人文', src: require('@/assets/img/type/type-6.jpeg'), link: '/type?id=2'},
-        {title: '风光', src: require('@/assets/img/type/type-7.png'), link: '/type?id=1'},
-        {title: '全部', src: require('@/assets/img/type/type-5.jpeg'), link: '/type'},
-      ],
-      // 大图
-      bigPics: [
-        {src: require('@/assets/img/carouse/carouse-1.jpg'), link: '/goos_detail?id=1'},
-        {src: require('@/assets/img/carouse/carouse-2.jpg'), link: '/goos_detail?id=1'},
-        {src: require('@/assets/img/carouse/carouse-3.jpg'), link: '/goos_detail?id=1'},
-        {src: require('@/assets/img/carouse/carouse-4.jpg'), link: '/goos_detail?id=1'},
-        {src: require('@/assets/img/carouse/carouse-5.jpg'), link: '/goos_detail?id=1'},
-      ],
+      banners: [], // 轮播图列表
+      cates: [], // 分类列表
+      bigPics: [], //大图专区列表
+      goodsList: [], // 产品列表
       loading: false,
       finished: false,
-      goodsList: [],
+      page: 1,
+      prePage: 10,
     };
   },
 
-  created() {},
+  created() {
+    this.getBanner();
+    this.getCate();
+    this.getBigPic();
+  },
 
   methods: {
     getGoodsList() {
-      // this.loading = true;
-    }
+      this.loading = true;
+      this.$api.getGoodsList({page: this.page, prePage: this.prePage})
+      .then(res => {
+        if (res.code === '00') {
+          this.goodsList = this.goodsList.concat(res.data);
+
+          if (this.page >= res.lastPage) {
+            this.finished = true;
+          }
+          this.page++
+          this.loading = false;
+        } else {
+          this.$toast(res.msg);
+          this.loading = false;
+        }
+      })
+    },
+
+    // 获取banner
+    getBanner() {
+      this.$api.getBanner()
+      .then(res => {
+        if (res.code === '00') {
+          this.banners = res.data;
+        } else {
+          this.$toast(res.msg);
+        }
+      })
+    },
+
+    // 获取大图专区
+    getBigPic() {
+      this.$api.getBigPic()
+      .then(res => {
+        if (res.code === '00') {
+          this.bigPics = res.data;
+        } else {
+          this.$toast(res.msg);
+        }
+      })
+    },
+
+    // 获取分类列表
+    getCate() {
+      this.$api.getCate()
+      .then(res => {
+        if (res.code === '00') {
+          this.cates = res.data;
+        } else {
+          this.$toast(res.msg);
+        }
+      })
+    },
+
   },
 
 } 
@@ -107,7 +143,7 @@ export default {
 
     .bd-t {
       // background-color: #fff;
-      padding-bottom: .3rem;
+      padding-bottom: .2rem;
       .bd-t-item {
         flex: 1;
         text-align: center;
@@ -118,7 +154,18 @@ export default {
       }
       .bd-t-item-title {
         font-size: .13rem;
-        color: @blue
+      }
+      .bd-t-item-title-0 {
+        color: @blue;
+      }
+      .bd-t-item-title-1 {
+        color: @pink;
+      }
+      .bd-t-item-title-2 {
+        color: @green;
+      }
+      .bd-t-item-title-3 {
+        color: @purple;
       }
     }
 
@@ -145,29 +192,10 @@ export default {
         background-color: #fff;
       }
     }
-
     .ft-content {
-      // padding-top: .2rem;
+      padding-top: .3rem;
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 </style>
