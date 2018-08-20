@@ -138,6 +138,7 @@ export default {
       min-height: 90vh;
       padding: .15rem .1rem;
       overflow-x: hidden;
+      box-sizing: border-box;
       img {
         max-width: 100%;
         height: auto !important;
