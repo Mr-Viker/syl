@@ -4,8 +4,8 @@
     <router-view :class='{"page-has-hd": showHd, "page-has-tab": showTab}'/>
     <v-tabbar v-if='showTab'></v-tabbar>
 
-    <van-icon name="points" @click='showAudioPanel = !showAudioPanel' class='hd-play' />
-    <audio-panel :show="showAudioPanel"></audio-panel>
+    <!-- <van-icon name="points" @click='showAudioPanel = !showAudioPanel' class='hd-play' /> -->
+    <!-- <audio-panel :show="showAudioPanel"></audio-panel> -->
   </div>
 </template>
 
@@ -41,7 +41,7 @@ export default {
       this.watchRouter();
       return res;
     }).then(res => {
-      this.initAudio(this.$store.state.userInfo.autoplay);
+      // this.initAudio(this.$store.state.userInfo.autoplay);
     });
   },
 
