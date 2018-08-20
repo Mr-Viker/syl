@@ -19,7 +19,7 @@ module.exports = {
   configureWebpack: {
     resolve: {
       alias: {
-        '@@': path.join(__dirname, 'public', 'static'),
+        '@@': path.join(__dirname, 'public', 'configs'),
       }
     },
   },
