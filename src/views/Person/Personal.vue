@@ -10,11 +10,11 @@
     </van-cell-group>
 
     <van-cell-group class="page-bd">
-      <van-cell title="昵称" :value='userInfo.username' icon="points" @click='showDialog = !showDialog' is-link />
+      <van-cell title="昵称" :value='userInfo.username' icon="contact" @click='showDialog = !showDialog' is-link />
       <van-cell title="手机号" :value='userInfo.phone' icon="phone" class='bd-cell-2' />
       <van-cell title="密码" value='修改密码' icon="edit-data" is-link to='/changePassword' />
       <van-cell title="地址" value='管理地址' icon="location" is-link to='/addressList' />
-      <van-switch-cell v-model="userInfo.autoplay" title="自动播放" @change='updateAutoplay' />
+      <!-- <van-switch-cell v-model="userInfo.autoplay" title="自动播放" @change='updateAutoplay' /> -->
     </van-cell-group>
 
     <div class="btn-submit-container">
